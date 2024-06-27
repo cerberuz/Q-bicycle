@@ -121,13 +121,7 @@
                                 History
                             </a>
                         </li>
-<!--
-                        <li class="govuk-tabs__list-item">
-                            <a class="govuk-tabs__tab" href="#licenceActivity">
-                                Licence Activity
-                            </a>
-                        </li>
--->
+
                     </ul>
                     <section class="govuk-tabs__panel" id="create">
                         <h2 class="govuk-heading-l">Create a licence</h2>
@@ -316,20 +310,6 @@ var myChart = new Chart(ctx, {
     </table>
 </div>
 
-<div th:fragment="licenceActivityNotAvailable" th:if="${historyNotAvailableMessage != null}" id="licenceActivityResults-BlockNotAvailable">
-    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
-        <h2 class="govuk-error-summary__title" id="error-summary-title">
-            Data Unavailable in DynamoDB
-        </h2>
-        <div class="govuk-error-summary__body">
-            <ul class="govuk-list govuk-error-summary__list">
-                <li>
-                    <a href="#id-error">Requested ID is not available with DynamoDB</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 
 <div th:fragment="historyResultsList" th:unless="${#lists.isEmpty(revisions)}" id="results-block">
     <table class="govuk-table">
@@ -486,9 +466,7 @@ var myChart = new Chart(ctx, {
     /*<![CDATA[*/
     $(document).ready(function () {
         /*[+
-         var postUrl = [[@{/queryLicence(
-         additionalParam=${#httpServletRequest.getParameter('additionalParam')}
-         )}]];
+         var postUrl = [[@{/queryLicence}]];
          +]*/
         $("#queryForm").submit(function (e) {
             e.preventDefault();
@@ -521,9 +499,7 @@ var myChart = new Chart(ctx, {
     /*<![CDATA[*/
     $(document).ready(function () {
         /*[+
-         var updatePostUrl = [[@{/updateLicenceForm(
-         additionalParam=${#httpServletRequest.getParameter('additionalParam')}
-         )}]];
+         var updatePostUrl = [[@{/updateLicenceForm}]];
          +]*/
         $("#updateLicenceForm").submit(function (e) {
             e.preventDefault();
