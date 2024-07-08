@@ -48,7 +48,7 @@ public final class Verifier {
     /**
      * Compares two hashes by their <em>signed</em> byte values in little-endian order.
      */
-    private static Comparator<byte[]> hashComparator = (h1, h2) -> {
+    static Comparator<byte[]> hashComparator = (h1, h2) -> {
         if (h1.length != HASH_LENGTH || h2.length != HASH_LENGTH) {
             throw new IllegalArgumentException("Invalid hash.");
         }
