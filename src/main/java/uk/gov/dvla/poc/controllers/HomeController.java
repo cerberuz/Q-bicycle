@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.dvla.poc.events.LicenceCreated;
 import uk.gov.dvla.poc.forms.*;
 import uk.gov.dvla.poc.model.BicycleLicence;
-import uk.gov.dvla.poc.repository.BicycleLicenceQLDBRepository;
+import uk.gov.dvla.poc.model.Event;
+import uk.gov.dvla.poc.repository.BicycleLicenceDynamoDBRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -21,12 +23,18 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Controller
 public class HomeController {
 
-    private BicycleLicenceQLDBRepository licenceQLDBRepository;
+    LocalDateTime now = LocalDateTime.now();
+    String formattedDateTime = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-    public HomeController(BicycleLicenceQLDBRepository licenceQLDBRepository) {
+    private BicycleLicenceDynamoDBRepository licenceQLDBRepository;
+
+    public HomeController(BicycleLicenceDynamoDBRepository licenceQLDBRepository) {
         this.licenceQLDBRepository = licenceQLDBRepository;
     }
 
@@ -63,6 +71,7 @@ public class HomeController {
         licence.setName(form.getName());
         licence.setTelephone(form.getTelephone());
         licence.setPenaltyPoints(0);
+        licence.addEvent(new LicenceCreated());
         BicycleLicence committedLicence = licenceQLDBRepository.save(licence);
         model.addAttribute("message", "Bicycle Licence Added: Doc Id(" + committedLicence.getId() + ")");
         addLicencesToModel(request, model);

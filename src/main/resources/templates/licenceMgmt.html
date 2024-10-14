@@ -196,6 +196,8 @@
                             </button>
                         </form>
                     </section>
+
+
                     <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="history">
                         <h2 class="govuk-heading-l">History</h2>
                         <p class="govuk-body-l" id="updateHistoryMessage"></p>
@@ -211,7 +213,7 @@
                                 <label class="govuk-label" for="emailQuery">
                                     Document Id:
                                 </label>
-                                <span id="qldbDocId-hint" class="govuk-hint">Document Id from the QLDB Metadata</span>
+                                <span id="qldbDocId-hint" class="govuk-hint">Document Id of the licence</span>
                                 <input class="govuk-input" id="qldbDocId" name="qldbDocId" type="text" aria-describedby="qldbDocId-hint">
                             </div>
                             <button class="govuk-button" data-module="govuk-button" type="submit">
@@ -315,117 +317,35 @@ var myChart = new Chart(ctx, {
     <table class="govuk-table">
         <thead class="govuk-table__head">
             <tr>
-                <th scope="col" class="govuk-table__header">Verify</th>
-                <th scope="col" class="govuk-table__header">Version</th>
-                <th scope="col" class="govuk-table__header">Metadata</th>
-                <th scope="col" class="govuk-table__header">Integrity</th>
-                <th scope="col" class="govuk-table__header">Document</th>
+                <th scope="col" class="govuk-table__header">ID</th>
+                <th scope="col" class="govuk-table__header">Name</th>
+                <th scope="col" class="govuk-table__header">Telephone</th>
+                <th scope="col" class="govuk-table__header">Points</th>
+                <th scope="col" class="govuk-table__header">Events</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
             <tr th:each="revision, iterator : ${revisions}">
-                <td class="govuk-table__cell_center">
-
-                    <button class="govuk-button" data-module="govuk-button" type="button" th:onclick="'verifyLicence(' + ${iterator.index} + ')'" th:id="'revision' + ${iterator.index}" >
-                        Verify
-                    </button>
-                    <div th:id="'revision' + ${iterator.index} + 'img'"></div>
-                    <div th:id="'loader' + ${iterator.index}" style="display:none; padding-left: 15px;">
-                    <div th:class="'loader' + ${iterator.index}" ></div>
-                    </div>
-
-                </td>
-                <td class="govuk-table__cell" th:text="${revision.version}"></td>
+                <td class="govuk-table__cell" th:text="${revision.id}"></td>
+                <td class="govuk-table__cell" th:text="${revision.name}"></td>
+                <td class="govuk-table__cell" th:text="${revision.telephone}"></td>
+                <td class="govuk-table__cell" th:text="${revision.penaltyPoints}"></td>
                 <td class="govuk-table__cell">
                     <details class="govuk-details" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                              Metadata
+                              Events
                             </span>
                         </summary>
                         <div class="govuk-details__text">
                             <table class="govuk-table">
-                                <caption class="govuk-table__caption">Metadata</caption>
+                                <caption class="govuk-table__caption">Events</caption>
                                 <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Version</th>
-                                    <td class="govuk-table__cell" th:text="${revision.version}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Doc Id</th>
-                                    <td class="govuk-table__cell" th:text="${revision.documentId}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Transaction Id</th>
-                                    <td class="govuk-table__cell" th:text="${revision.transactionId}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Transaction Time</th>
-                                    <td class="govuk-table__cell" th:text="${revision.transactionTime}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </details>
-                </td>
-                <td class="govuk-table__cell">
-                    <details class="govuk-details" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                              Integrity Information
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <table class="govuk-table">
-                                <caption class="govuk-table__caption">Integrity Information</caption>
-                                <tbody class="govuk-table__body">
-                                    <tr class="govuk-table__row">
-                                        <th scope="row" class="govuk-table__header">Sequence No</th>
-                                        <td class="govuk-table__cell" th:text="${revision.integrityInfo.sequenceNo}"></td>
-                                    </tr>
-                                    <tr class="govuk-table__row">
-                                        <th scope="row" class="govuk-table__header">Strand Id</th>
-                                        <td class="govuk-table__cell" th:text="${revision.integrityInfo.strandId}"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </details>
-                </td>
-                <td class="govuk-table__cell">
-                    <details class="govuk-details" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                              Document
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <table class="govuk-table">
-                                <caption class="govuk-table__caption">Document</caption>
-                                <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">GUID</th>
-                                    <td class="govuk-table__cell" th:text="${revision.licence.id}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Name</th>
-                                    <td class="govuk-table__cell" th:text="${revision.licence.name}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Email</th>
-                                    <td class="govuk-table__cell" th:text="${revision.licence.email}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Telephone</th>
-                                    <td class="govuk-table__cell" th:text="${revision.licence.telephone}"></td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <th scope="row" class="govuk-table__header">Penalty Points</th>
-                                    <td class="govuk-table__cell" th:text="${revision.licence.penaltyPoints}"></td>
-                                </tr>
-                                <tr th:each="event: ${revision.licence.events}">
+                                <tr th:each="event: ${revision.events}">
                                     <th scope="row" class="govuk-table__header" th:text="${event.eventName}"></th>
                                     <td class="govuk-table__cell" th:text="${event.eventDescription}"></td>
+                                    <td class="govuk-table__cell" th:text="${event.transactionDTM}"></td>
+                                    <td class="govuk-table__cell" th:text="${event.penaltyPoints}"></td>
                                 </tr>
                                 </tbody>
                             </table>

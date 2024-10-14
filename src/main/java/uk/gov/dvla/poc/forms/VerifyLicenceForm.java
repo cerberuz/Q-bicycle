@@ -4,7 +4,7 @@ import com.amazon.ion.IonStruct;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.gov.dvla.poc.service.Verifier;
+// import uk.gov.dvla.poc.service.Verifier;
 
 import java.nio.ByteBuffer;
 
