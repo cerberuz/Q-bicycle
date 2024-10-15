@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFormation template to create a DynamoDB table for Bicycle Licences'
+
+Resources:
+  BicycleLicenceTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: BicycleLicence
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: email-index
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+
+Outputs:
+  TableName:
+    Description: Name of the created DynamoDB table
+    Value: !Ref BicycleLicenceTable
+  TableArn:
+    Description: ARN of the created DynamoDB table
+    Value: !GetAtt BicycleLicenceTable.Arn
