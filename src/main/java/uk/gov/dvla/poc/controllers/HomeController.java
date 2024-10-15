@@ -1,30 +1,23 @@
 package uk.gov.dvla.poc.controllers;
 
-import com.amazon.ion.IonReader;
-import com.amazon.ion.system.IonReaderBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import uk.gov.dvla.poc.events.LicenceCreated;
-import uk.gov.dvla.poc.forms.*;
+import uk.gov.dvla.poc.forms.BicycleLicenceCreateForm;
+import uk.gov.dvla.poc.forms.BicycleLicenceQueryForm;
+import uk.gov.dvla.poc.forms.BicycleLicenceUpdateForm;
 import uk.gov.dvla.poc.model.BicycleLicence;
-import uk.gov.dvla.poc.model.Event;
 import uk.gov.dvla.poc.repository.BicycleLicenceDynamoDBRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.StreamSupport;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+import java.util.stream.StreamSupport;
 
 @Controller
 public class HomeController {
@@ -61,7 +54,7 @@ public class HomeController {
                 .orElse(null);
 
         if(existingLicence != null) {
-            model.addAttribute("message", "Email already exists - please try again");
+//            model.addAttribute("message", "Email already exists - please try again");
             initForms(model);
             return "licenceMgmt";
         }
@@ -90,12 +83,6 @@ public class HomeController {
 
         BicycleLicenceUpdateForm licenceUpdateForm = new BicycleLicenceUpdateForm();
         model.addAttribute("bicycleLicenceUpdateForm", licenceUpdateForm);
-
-        VerifyLicenceForm verifyLicenceForm = new VerifyLicenceForm();
-        model.addAttribute("verifyLicenceForm", verifyLicenceForm);
-
-        LicenceIdQueryForm licenceActivityQueryForm = new LicenceIdQueryForm();
-        model.addAttribute("licenceActivityQueryForm", licenceActivityQueryForm);
     }
 
     private Iterable<BicycleLicence> addLicencesToModel(HttpServletRequest request, Model model) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import uk.gov.dvla.poc.events.ContactDetailsChanged;
 import uk.gov.dvla.poc.events.NameChanged;
 import uk.gov.dvla.poc.events.PenaltyPointsAdded;
 import uk.gov.dvla.poc.events.PenaltyPointsRemoved;
@@ -14,8 +15,6 @@ import uk.gov.dvla.poc.repository.LicenceActivityDynamoRepository;
 import org.springframework.ui.Model;
 import uk.gov.dvla.poc.forms.BicycleLicenceQueryForm;
 import uk.gov.dvla.poc.forms.BicycleLicenceUpdateForm;
-import uk.gov.dvla.poc.model.dynamo.Activity;
-import uk.gov.dvla.poc.model.dynamo.LicenceActivity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -52,18 +51,21 @@ public class DynamoDBController {
             log.info("The licence penalty points is " + licence.getPenaltyPoints());
             log.info("The form penalty points is " + form.getPenaltyPoints());
 
-            if (form.getPenaltyPoints() > 0) {
-                licence.addEvent(new PenaltyPointsAdded(form.getPenaltyPoints()));
-                int points  = licence.getPenaltyPoints() + form.getPenaltyPoints();
-                licence.setPenaltyPoints(points);
-            } else if (form.getPenaltyPoints() < 0) {
-                licence.addEvent(new PenaltyPointsRemoved(form.getPenaltyPoints()));
-                int points  = licence.getPenaltyPoints() + form.getPenaltyPoints();
-                licence.setPenaltyPoints(points);
-            } else if (form.getPenaltyPoints() == 0) {
+            if (form.getPenaltyPoints() > licence.getPenaltyPoints()) {
+                int points  = form.getPenaltyPoints() - licence.getPenaltyPoints();
+                licence.addEvent(new PenaltyPointsAdded(points));
+                licence.setPenaltyPoints(form.getPenaltyPoints());
+            } else if (form.getPenaltyPoints() < licence.getPenaltyPoints()) {
+                int points  = licence.getPenaltyPoints() - form.getPenaltyPoints();
+                licence.addEvent(new PenaltyPointsRemoved(points));
+                licence.setPenaltyPoints(form.getPenaltyPoints());
+            } else if (form.getPenaltyPoints() == licence.getPenaltyPoints()) {
                 if (!form.getName().equals(licence.getName())) {
                     licence.addEvent(new NameChanged());
                     licence.setName(form.getName());
+                } else if (!form.getTelephone().equals(licence.getTelephone())) {
+                    licence.addEvent(new ContactDetailsChanged());
+                    licence.setTelephone(form.getTelephone());
                 }
             }
             licence = licenceDynamoDBRepository.save(licence);
@@ -73,14 +75,6 @@ public class DynamoDBController {
         return "error";
     }
 
-    @GetMapping("/licenceActivity")
-    public ModelAndView queryLicenceActivity(HttpServletRequest request, @RequestParam String id, Model model) throws JsonProcessingException {
-        log.info("Querying licence activity");
-        Optional<LicenceActivity> activities = licenceActivityDynamoRepository.findById(id);
-        model.addAttribute("activities", activities);
-        return new ModelAndView("activity");
-    }
-
     /**
      * Ajax Post
      * @return
@@ -88,8 +82,6 @@ public class DynamoDBController {
     @GetMapping("/history")
     public ModelAndView queryHistory(HttpServletRequest request, @RequestParam String email, @RequestParam String docId, Model model) throws JsonProcessingException {
         log.info("Email " + email);
-        log.info("Doc Id " + docId);
-
         BicycleLicence licence = licenceDynamoDBRepository.findByEmail(email);
         log.info("Licence " + licence);
 

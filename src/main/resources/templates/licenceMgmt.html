@@ -209,13 +209,6 @@
                                 <span id="emailHistoryQuery-hint" class="govuk-hint">Email address of the licence holder</span>
                                 <input class="govuk-input" id="emailHistoryQuery" name="email" type="text" aria-describedby="emailHistoryQuery-hint">
                             </div>
-                            <div class="govuk-form-group">
-                                <label class="govuk-label" for="emailQuery">
-                                    Document Id:
-                                </label>
-                                <span id="qldbDocId-hint" class="govuk-hint">Document Id of the licence</span>
-                                <input class="govuk-input" id="qldbDocId" name="qldbDocId" type="text" aria-describedby="qldbDocId-hint">
-                            </div>
                             <button class="govuk-button" data-module="govuk-button" type="submit">
                                 Search
                             </button>
@@ -252,66 +245,6 @@
         </div>
     </main>
 </div>
-
-<div th:fragment="licenceActivityFragment" th:if="${licenceActivity != null}" id="licenceActivityResults-Block">
-    <div class="chart-container" style="position: relative; height:600px; width:1200px">
-        <canvas id="licenceActivityChart"></canvas>
-    </div>
-    <script>
-    /*<![CDATA[*/
-
-var ctx = document.getElementById('licenceActivityChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Penalty Points Added', 'Penalty Points Removed', 'Contact Details Changed', 'Name Changed'],
-        datasets: [{
-            label: 'Activity',
-            data: [ [[${licenceActivity.penaltyPointsAddedEvents}]], [[${licenceActivity.penaltyPointsRemovedEvents}]], [[${licenceActivity.nameChangedEvents}]], [[${licenceActivity.contactDetailsChangedEvents}]] ],
-            backgroundColor: [
-                'rgba(0,112, 60, 1)',
-                'rgba(0, 112, 60, 1)',
-                'rgba(0, 112, 60, 1)',
-                'rgba(0, 112, 60, 1)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    precision: 0
-                }
-            }]
-        }
-    }
-});
-/*]]>*/
-</script>
-    <table class="govuk-table">
-        <caption class="govuk-table__caption">Projected View</caption>
-        <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">Current Penalty Points</th>
-            <td class="govuk-table__cell" th:text="${licenceActivity.penaltyPoints}"></td>
-        </tr>
-        <tr th:each="event: ${licenceActivity.activity}">
-            <td class="govuk-table__cell" th:text="${event.eventName}"></td>
-            <td class="govuk-table__cell" th:text="${event.eventDescription}"></td>
-            <td class="govuk-table__cell" th:text="${event.eventDate}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
 
 <div th:fragment="historyResultsList" th:unless="${#lists.isEmpty(revisions)}" id="results-block">
     <table class="govuk-table">
