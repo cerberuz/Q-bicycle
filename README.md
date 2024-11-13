@@ -2,9 +2,9 @@
 
 This repository hosts a Java 11 codebase using Spring Boot for interacting with Amazon DynamoDB in a fictitious scenario of managing a Bicycle Licence application. The user interface allows you to:
 
- - Register a new Bicycle Licence
- - Update details such as contact number and penalty points
- - View all the activity against a licence via Events
+- Register a new Bicycle Licence
+- Update details such as contact number and penalty points
+- View all the activity against a licence via Events
 
 ## Project Overview
 
@@ -18,11 +18,11 @@ Since Amazon Quantum Ledger Database (QLDB) was deprecated in July 2024, the cod
 - Spring Boot (version 2.1.8.RELEASE)
 - Maven (for dependency management and build)
 - Amazon Web Services (AWS) SDK
-  - AWS Java SDK for DynamoDB (version 1.11.693)
+    - AWS Java SDK for DynamoDB (version 1.11.693)
 - Spring Boot Starter Dependencies:
-  - spring-boot-starter-web
-  - spring-boot-starter-thymeleaf
-  - spring-boot-starter-data-jpa
+    - spring-boot-starter-web
+    - spring-boot-starter-thymeleaf
+    - spring-boot-starter-data-jpa
 - Jackson Core (version 2.10.3)
 - Lombok
 - HSQLDB (for runtime, to be removed and replaced with appropriate JPA excludes)
