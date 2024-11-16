@@ -25,10 +25,10 @@ public class HomeController {
     LocalDateTime now = LocalDateTime.now();
     String formattedDateTime = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-    private BicycleLicenceDynamoDBRepository licenceQLDBRepository;
+    private BicycleLicenceDynamoDBRepository licenceDynamoDBRepository;
 
-    public HomeController(BicycleLicenceDynamoDBRepository licenceQLDBRepository) {
-        this.licenceQLDBRepository = licenceQLDBRepository;
+    public HomeController(BicycleLicenceDynamoDBRepository licenceDynamoDBRepository) {
+        this.licenceDynamoDBRepository = licenceDynamoDBRepository;
     }
 
     @GetMapping("/")
@@ -65,7 +65,7 @@ public class HomeController {
         licence.setTelephone(form.getTelephone());
         licence.setPenaltyPoints(0);
         licence.addEvent(new LicenceCreated());
-        BicycleLicence committedLicence = licenceQLDBRepository.save(licence);
+        BicycleLicence committedLicence = licenceDynamoDBRepository.save(licence);
         model.addAttribute("message", "Bicycle Licence Added: Doc Id(" + committedLicence.getId() + ")");
         addLicencesToModel(request, model);
 
@@ -86,7 +86,7 @@ public class HomeController {
     }
 
     private Iterable<BicycleLicence> addLicencesToModel(HttpServletRequest request, Model model) {
-        Iterable<BicycleLicence> licences = licenceQLDBRepository.findAll();
+        Iterable<BicycleLicence> licences = licenceDynamoDBRepository.findAll();
         model.addAttribute("licences", licences);
         request.getSession().setAttribute("licences", licences);
         return licences;
