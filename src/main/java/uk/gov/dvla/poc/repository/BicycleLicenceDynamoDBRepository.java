@@ -23,7 +23,7 @@ public class BicycleLicenceDynamoDBRepository implements CrudRepository<BicycleL
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-            .withRegion(Regions.EU_WEST_1)
+            .withRegion(Regions.US_EAST_1)
             .build();
 
     private final DynamoDBMapper dynamoDBMapper = new DynamoDBMapper(client);
